@@ -21,6 +21,7 @@ import java.net.Socket;
 import java.io.OutputStream;
 import java.net.HttpURLConnection;
 import java.net.URL;
+import java.util.concurrent.TimeUnit;
 
 /**
  *
@@ -30,16 +31,26 @@ public class JavaApplication8 {
     
     private static final String USER_AGENT = "Mozilla/5.0";
     //private static final String GET_URL = "https://csrng.net/csrng/csrng.php?min=1&max=10000";
-    private static final String GET_URL = "http://www.7timer.info/bin/api.pl?lon=13&lat=52&product=civillight&output=json";
+    
         
-    public static void main(String[] args) throws IOException {
-        
+    public static void main(String[] args) throws IOException, InterruptedException {
+        int lon = -2;
+        int lat = 80;
+        String GET_URL = "http://www.7timer.info/bin/civillight.php?lon="+lon+"&lat="+lat+"&product=civillight&output=json&lang=en";
+        //String GET_URL = "https://www.7timer.info/bin/civillight.php?lon=113.2&lat=23.1&ac=0&unit=metric&output=json&tzshift=0";
+        //String GET_URL = "
+        System.out.println(GET_URL);
         System.out.println("Starting up");
             URL obj = new URL(GET_URL);
             HttpURLConnection con = (HttpURLConnection) obj.openConnection();
             con.setRequestMethod("GET");
             con.setRequestProperty("User-Agent", USER_AGENT);
-            if (con.getResponseCode() == HttpURLConnection.HTTP_OK) { // success
+            System.out.println("Connecting...");
+//            while(true){
+                TimeUnit.SECONDS.sleep(1);
+                System.out.println(lat+"."+lon);
+                if (con.getResponseCode() == HttpURLConnection.HTTP_OK) { // success
+                    System.out.println("trying the reader");
                     BufferedReader in = new BufferedReader(new InputStreamReader(con.getInputStream()));
                     String inputLine;
                     //StringBuffer response = new StringBuffer();
@@ -48,24 +59,20 @@ public class JavaApplication8 {
                             response = response + inputLine;
                     }
                     in.close();
-                    
-                    
-                    
-                    
-                    String[] arr = null;
-                    arr = response.split(",");
-                    String result = arr[3];
-                    int start = result.indexOf(":");
-                    int end = result.indexOf("}");
-                    result = result.substring(start +1,end);
-                    System.out.println(result);
+                    System.out.println(response);
                     //JsonObject jsnObj = new Gson().fromJson(response,JsonObject.class);
                     //return response;
-            } else {
-                    //return "Error";
-            }
-    }
+            } 
     
-}
+//                else {
+//                    lat = lat +5;
+//                    lon = lon +4;
+                    
+            }
+        }
+            
+    
+    
+
     
 

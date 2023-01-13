@@ -18,7 +18,7 @@ import java.sql.Statement;
 public class AzureSql {
     public static void main(String[] args) {
         
-        int executeFunction = 6;
+        int executeFunction = 5;
         
         String userName = "tripcreatoradmin";
         String userPass = "tripPass#";
@@ -64,8 +64,9 @@ public class AzureSql {
             System.out.println(result);
         }
         else if(executeFunction ==5){
-            String test11 = "Test";
-            sql = "INSERT INTO trips (location,date,weather,userIdOwner)VALUES('"+test11+"',20220901,'clear',5)";
+            String test11 = "Nottingham";
+            sql = "INSERT INTO trips (location,date,weather,interested,userIdOwner)VALUES('Evesham',20200101,'Sunny','1',1)";
+            //sql = "INSERT INTO trips (location,date,weather,userIdOwner)VALUES('"+test11+"',20220901,'clear',5)";
             System.out.println(sql);
             result = azure.ExecuteAzureInsertTrip(userName, userPass, sql, cnnString);
             System.out.println("end");
@@ -76,6 +77,18 @@ public class AzureSql {
             System.out.println(sql);
             //sql = "SELECT interested FROM trips WHERE trip_id = 24";
             result = azure.ExecuteAzureSqlSelectPreferences(userName, userPass, sql, cnnString);
+            System.out.println(result);
+            //result = azure.ExecuteAzureSqlInsertUserId(userName, userPass, sql, cnnString);
+        }
+        else if(executeFunction == 7){//
+            int tripId = 24;
+            result = "20,15,4,2,8";
+            //String sql = "INSERT INTO trips (location,date,weather,interested,userIdOwner)VALUES('"+trippost.getLocation()+"',"+trippost.getDate()+",'"+trippost.getWeather()+"','"+trippost.getInterested()+"',"+trippost.getUserIdOwner()+")";
+            String sqlIns = "UPDATE trips SET interested = '"+result+"' WHERE trip_id = "+tripId+";";
+            //UPDATE trips SET interested = 20,15,4,28 WHERE trip_id = 24;
+            System.out.println(sqlIns);
+            //sql = "SELECT interested FROM trips WHERE trip_id = 24";
+            result = azure.ExecuteAzureSqlUpdatePref(userName, userPass, sqlIns, cnnString);
             System.out.println(result);
             //result = azure.ExecuteAzureSqlInsertUserId(userName, userPass, sql, cnnString);
         }
@@ -212,7 +225,20 @@ public class AzureSql {
         return result;
     }
 
-
+    public String ExecuteAzureSqlUpdatePref(String userName, String userPass, String sql, String cnnStr){
+       ResultSet resultSet = null;
+        String result = "";
+        try(Connection cnn = DriverManager.getConnection(cnnStr);Statement statement = cnn.createStatement();){
+                statement.executeUpdate(sql);
+                result = "Insert Successful";
+        }
+        catch(SQLException e){
+            //throw new RuntimeException("Error executing sql");
+            result = "error";
+                e.printStackTrace();
+                }  
+        return result;
+    }
 
 }
 

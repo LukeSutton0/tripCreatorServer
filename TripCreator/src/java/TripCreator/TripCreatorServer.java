@@ -60,6 +60,7 @@ public class TripCreatorServer {
            }      
         //"'{value1:itsValue}'"
         return idResult;
+        // return idResult;
     }
     
     /**
@@ -129,13 +130,13 @@ public class TripCreatorServer {
             lon = Math.floor(lon *100)/100;
             Double lat = latlon.getLat();
             lat = Math.floor(lat *100)/100;
-            weatherResponse = getWeather.get(lon,lat); //get weather json string from 7timer
+            weatherResponse = getWeather.get(lon,lat); //get weather json string from 7timer -->7 timer crashes often
             //weatherResponse = "{\"product\":\"civillight\",\"init\":\"2023010812\",\"dataseries\":[{\"date\":20230109,\"weather\":\"lightrain\",\"temp2m\":{\"max\":15,\"min\":14},\"wind10m_max\":2},{\"date\":20230110,\"weather\":\"rain\",\"temp2m\":{\"max\":15,\"min\":15},\"wind10m_max\":2},{\"date\":20230111,\"weather\":\"rain\",\"temp2m\":{\"max\":17,\"min\":15},\"wind10m_max\":2},{\"date\":20230112,\"weather\":\"rain\",\"temp2m\":{\"max\":17,\"min\":16},\"wind10m_max\":2},{\"date\":20230113,\"weather\":\"rain\",\"temp2m\":{\"max\":18,\"min\":17},\"wind10m_max\":2},{\"date\":20230114,\"weather\":\"rain\",\"temp2m\":{\"max\":25,\"min\":18},\"wind10m_max\":2},{\"date\":20230115,\"weather\":\"rain\",\"temp2m\":{\"max\":20,\"min\":9},\"wind10m_max\":3}]}";
-
+            
             Gson gson3 = new Gson();
             Weather weather = gson3.fromJson(weatherResponse,Weather.class);  
-
             WeatherCheck weathercheck = new WeatherCheck();
+
             for(Dataseries dataseries: weather.getDataseries()){
                 if(dataseries.getDate()==(weatherDate.getDate())){ //see if date selected is found
                     weathercheck.setWeather(dataseries.getWeather());
@@ -177,8 +178,8 @@ public class TripCreatorServer {
             Gson gson = new Gson();
             TripPost trippost = gson.fromJson(tripString,TripPost.class);
             String sql = "INSERT INTO trips (location,date,weather,interested,userIdOwner)VALUES('"+trippost.getLocation()+"',"+trippost.getDate()+",'"+trippost.getWeather()+"','"+trippost.getInterested()+"',"+trippost.getUserIdOwner()+")";
-            AzureSql.main(sql, 5);
-           result = "{\"Post\":\"Complete\"}";
+            result = AzureSql.main(sql, 5);
+           //result = "{\"Post\":\"Complete\"}";
         }
         catch(Exception e){
             result = "Exception";
@@ -236,11 +237,23 @@ public class TripCreatorServer {
             Gson gson = new Gson();
             PreferenceJson prefJson = gson.fromJson(interestString,PreferenceJson.class);
             int tripId = prefJson.getTripId();
+            
             String sql = "SELECT interested FROM trips WHERE trip_id ="+tripId+"";
             result = AzureSql.main(sql,6);
-            
-            //result = result + prefJson.getInterested();
-            return result;
+            String[] resultarr = result.split(",");
+            boolean alreadyInList = false;
+            for(int x = 0 ; x < resultarr.length;x++){
+                if(prefJson.getInterested().equals(resultarr[x])){
+                    alreadyInList = true;
+                    break;
+                }
+            }
+            if (alreadyInList != true){
+                result = result + prefJson.getInterested();
+                String sqlIns ="UPDATE trips SET interested = '"+result+"' WHERE trip_id = "+tripId+";";
+                result = AzureSql.main(sqlIns,7);
+            }
+
             
             //get current
             
@@ -250,13 +263,7 @@ public class TripCreatorServer {
         }
         catch(Exception e){
                 e.printStackTrace();
-             result = "{"
-                     + "\"1\":\"No Trips\""+","
-                     + "\"2\":\"Try Creating\""+","
-                     + "\"3\":\"Some In\""+","
-                     + "\"4\":\"The Top\""+","
-                     + "\"5\":\"Right\""
-                     + "}";
+             result = "error";
         }
         //"'{value1:itsValue}'"
         return result;

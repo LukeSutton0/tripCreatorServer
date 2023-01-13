@@ -50,8 +50,10 @@ public class AzureSql {
         }
         else if(executeFunction == 6){//
             result = azure.ExecuteAzureSqlSelectPreferences(userName, userPass, sql, cnnString);
-            return result;
             //result = azure.ExecuteAzureSqlInsertUserId(userName, userPass, sql, cnnString);
+        }
+        else if(executeFunction == 7){//
+            result = azure.ExecuteAzureSqlUpdatePref(userName, userPass, sql, cnnString);
         }
         
         return result;
@@ -180,6 +182,20 @@ public class AzureSql {
             e.printStackTrace();
             }  
         
+        return result;
+    }
+    public String ExecuteAzureSqlUpdatePref(String userName, String userPass, String sql, String cnnStr){
+       ResultSet resultSet = null;
+        String result = "";
+        try(Connection cnn = DriverManager.getConnection(cnnStr);Statement statement = cnn.createStatement();){
+                statement.executeUpdate(sql);
+                result = "Insert Successful";
+        }
+        catch(SQLException e){
+            //throw new RuntimeException("Error executing sql");
+            result = "error";
+                e.printStackTrace();
+                }  
         return result;
     }
 }

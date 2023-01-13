@@ -5,6 +5,7 @@
  */
 package TripCreator;
 
+//import javaapplication8.TripArr;
 import com.google.gson.Gson;
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -30,17 +31,36 @@ public class Testing {
         String a = "{\"destination\": \"London\", \"date\": 20230112}";
         //checkWeather(a);
         //System.out.println(response);
+        String result = "";
+//        Gson gson = new Gson();
+//            String interestString = "{trip_id: \"25,26\", interested: 30}";
+//            System.out.println(interestString);
+//            PreferenceJson prefJson = gson.fromJson(interestString,PreferenceJson.class);
+//            System.out.println("made it");
+//            int tripId = prefJson.getTripId();
+//            String sql = "SELECT interested FROM trips WHERE trip_id ="+tripId+"";
+//            result = AzureSql.main(sql,6);
+//            TripArr[] tripArr = gson.fromJson(result,TripArr[].class);
+//            String test = "";
+//            for(TripArr trip :tripArr){
+//                test = test + trip.getTrip_id();
+//                trip.getTrip_id();
+//            }
         
-        String tripString = "{location: 'London', date: '20230113', weather: 'Rain', interested: '4819', userIdOwner: '4819'}";
-        Gson gson = new Gson();
-        System.out.println(tripString);
-        TripPost trippost = gson.fromJson(tripString,TripPost.class);
-        System.out.println(trippost);
-        String sql = "INSERT INTO trips (location,date,weather,interested,userIdOwner)VALUES('"+trippost.getLocation()+"',"+trippost.getDate()+",'"+trippost.getWeather()+"','"+trippost.getInterested()+"',"+trippost.getUserIdOwner()+")";
         
-        System.out.println(sql);
-        String b = AzureSql.main(sql, 5);
-        System.out.println(b);
+        
+        
+        
+//        String tripString = "{location: 'London', date: '20230113', weather: 'Rain', interested: '4819', userIdOwner: '4819'}";
+//        Gson gson = new Gson();
+//        System.out.println(tripString);
+//        TripPost trippost = gson.fromJson(tripString,TripPost.class);
+//        System.out.println(trippost);
+//        String sql = "INSERT INTO trips (location,date,weather,interested,userIdOwner)VALUES('"+trippost.getLocation()+"',"+trippost.getDate()+",'"+trippost.getWeather()+"','"+trippost.getInterested()+"',"+trippost.getUserIdOwner()+")";
+//        
+//        System.out.println(sql);
+//        String b = AzureSql.main(sql, 5);
+//        System.out.println(b);
         
     }
         

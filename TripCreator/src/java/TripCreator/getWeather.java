@@ -25,7 +25,7 @@ public class getWeather {
         return response;
     }
 	private static String sendGET(Double lon,Double lat) throws IOException {
-            String GET_URL = "http://www.7timer.info/bin/api.pl?lon="+lon+"&lat="+lat+"&product=civillight&output=json";
+            String GET_URL = "http://www.7timer.info/bin/civillight.php?lon="+lon+"&lat="+lat+"&product=civillight&output=json"; //not machine
 		URL obj = new URL(GET_URL);
 		HttpURLConnection con = (HttpURLConnection) obj.openConnection();
 		con.setRequestMethod("GET");
